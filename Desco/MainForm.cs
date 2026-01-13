@@ -63,7 +63,7 @@ namespace Desco
             shader = new Shader(
                 File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Assets\\VertexShader.glsl")),
                 File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Assets\\FragmentShader.glsl")));
-            font = new Cobalt.Font("DejaVu Sans");
+            //font = new Cobalt.Font("DejaVu Sans");
 
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length > 1) LoadFile(args[1]);
@@ -127,6 +127,23 @@ namespace Desco
             }
         }
 
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            // Open file obf, or pac containing obf
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "OBF Files (*.obf)|*.obf|PAC Files (*.pac)|*.pac|All Files (*.*)|*.*";
+            try
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    LoadFile(ofd.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void renderControl1_Render(object sender, EventArgs e)
         {
             this.Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} - {1} FPS", Application.ProductName, Core.CurrentFramesPerSecond);
@@ -176,7 +193,7 @@ namespace Desco
             if (obfBinary != null)
             {
                 GL.Enable(EnableCap.Blend);
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
                 if (shader != null)
                     shader.SetUniform("alpha_reference", 0.5f);
